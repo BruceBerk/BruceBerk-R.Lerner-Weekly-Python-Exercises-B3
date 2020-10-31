@@ -1,5 +1,6 @@
 import csv
 import pickle
+import json
 
 
 class Serializable:
@@ -34,10 +35,14 @@ class CSVMixin:
 
 class JSONMixin:
     def dump(self, path: str):
-        pass
+        with open(path, 'w') as f:
+            json.dump(self.__dict__, f)
 
     def load(self, path: str):
-        pass
+        with open(path, 'r') as f:
+            tmp_dict = json.load(f)
+            self.__dict__.update(tmp_dict)
+            return self
 
 
 class XMLMixin:
