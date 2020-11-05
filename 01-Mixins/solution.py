@@ -1,6 +1,7 @@
 import csv
 import pickle
 import json
+import xml.etree.ElementTree as ET
 
 
 class Serializable:
@@ -47,8 +48,29 @@ class JSONMixin:
 
 class XMLMixin:
     def dump(self, path: str):
-        pass
+        data = ET.Element('book')
+        for key, value in self.__dict__.items():
+            element = ET.SubElement(data, key)
+            if isinstance(value, int):
+                element.set('type', 'int')
+            elif isinstance(value, float):
+                element.set('type', 'float')
+            else:
+                element.set('type', 'str')
+            element.text = str(value)
+
+        b_xml = ET.tostring(data)
+        with open(path, 'wb') as f:
+            f.write(b_xml)
 
     def load(self, path: str):
-        pass
+        tree = ET.parse(path)
+        root = tree.getroot()
 
+        book_dict = {}
+        for idx in range(len(root)):
+            leaf = root[idx]
+            book_dict[leaf.tag] = leaf.text
+
+        self.__dict__.update(book_dict)
+        return self

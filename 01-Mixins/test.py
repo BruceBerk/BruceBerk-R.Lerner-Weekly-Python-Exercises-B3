@@ -84,15 +84,15 @@ def test_xml_mixin(tmp_path):
         def __repr__(self):
             return f"{self.title}, by {self.author}, for {self.price}"
 
-    b = Book('title', 'author', 100)
+    b = Book('And Then There Were None', 'Agatha Christie', 100)
     p = tmp_path / "hello.txt"
-
+    p = "tmp/book.xml"
     b.dump(p)
 
     b = Book('Catch-22', 'Joseph Heller', 30)
 
     b.load(p)
 
-    assert b.title == 'title'
-    assert b.author == 'author'
+    assert b.title == 'And Then There Were None'
+    assert b.author == 'Agatha Christie'
     assert int(b.price) == 100
